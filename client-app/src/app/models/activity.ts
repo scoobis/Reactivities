@@ -1,9 +1,9 @@
 export interface IActivity {
-  id: String;
-  title: String;
-  description: String;
-  catagory: String;
-  date: Date;
-  city: String;
-  venue: String;
+  id: string;
+  title: string;
+  description: string;
+  catagory: string;
+  date: string;
+  city: string;
+  venue: string;
 }
