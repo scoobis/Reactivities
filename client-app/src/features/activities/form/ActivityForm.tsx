@@ -1,35 +1,29 @@
-import React, { useState, FormEvent } from "react";
-import { Segment, Form, Button } from "semantic-ui-react";
-import { IActivity } from "../../../app/models/activity";
-import { v4 as uuid } from "uuid";
+import React, { useState, FormEvent, useContext } from 'react';
+import { Segment, Form, Button } from 'semantic-ui-react';
+import { IActivity } from '../../../app/models/activity';
+import { v4 as uuid } from 'uuid';
+import ActivityStore from '../../../app/stores/activityStore';
+import { observer } from 'mobx-react-lite';
 
 interface IProps {
-  setEditMode: (editMode: boolean) => void;
   activity: IActivity;
-  createActivity: (activity: IActivity) => void;
-  editActivity: (activity: IActivity) => void;
-  submitting: boolean;
 }
 
-export const ActivityForm: React.FC<IProps> = ({
-  setEditMode,
-  activity: intitialFormState,
-  createActivity,
-  editActivity,
-  submitting,
-}) => {
+const ActivityForm: React.FC<IProps> = ({ activity: intitialFormState }) => {
+  const activityStore = useContext(ActivityStore);
+  const { createActivity, editActivity, submitting, cancleFormOpen } = activityStore;
   const intitializeFrom = () => {
     if (intitialFormState) {
       return intitialFormState;
     } else {
       return {
-        id: "",
-        title: "",
-        catagory: "",
-        description: "",
-        date: "",
-        city: "",
-        venue: "",
+        id: '',
+        title: '',
+        catagory: '',
+        description: '',
+        date: '',
+        city: '',
+        venue: '',
       };
     }
   };
@@ -48,9 +42,7 @@ export const ActivityForm: React.FC<IProps> = ({
     }
   };
 
-  const handleInputChnage = (
-    event: FormEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const handleInputChnage = (event: FormEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = event.currentTarget;
     setActivity({ ...activity, [name]: value });
   };
@@ -58,12 +50,7 @@ export const ActivityForm: React.FC<IProps> = ({
   return (
     <Segment clearing>
       <Form>
-        <Form.Input
-          placeholder="Title"
-          onChange={handleInputChnage}
-          name="title"
-          value={activity.title}
-        />
+        <Form.Input placeholder="Title" onChange={handleInputChnage} name="title" value={activity.title} />
         <Form.TextArea
           onChange={handleInputChnage}
           name="description"
@@ -71,12 +58,7 @@ export const ActivityForm: React.FC<IProps> = ({
           placeholder="Description"
           value={activity.description}
         />
-        <Form.Input
-          onChange={handleInputChnage}
-          name="catagory"
-          placeholder="Category"
-          value={activity.catagory}
-        />
+        <Form.Input onChange={handleInputChnage} name="catagory" placeholder="Category" value={activity.catagory} />
         <Form.Input
           onChange={handleInputChnage}
           name="date"
@@ -84,18 +66,8 @@ export const ActivityForm: React.FC<IProps> = ({
           placeholder="Date"
           value={activity.date}
         />
-        <Form.Input
-          onChange={handleInputChnage}
-          name="city"
-          placeholder="City"
-          value={activity.city}
-        />
-        <Form.Input
-          onChange={handleInputChnage}
-          name="venue"
-          placeholder="Venue"
-          value={activity.venue}
-        />
+        <Form.Input onChange={handleInputChnage} name="city" placeholder="City" value={activity.city} />
+        <Form.Input onChange={handleInputChnage} name="venue" placeholder="Venue" value={activity.venue} />
         <Button
           loading={submitting}
           onClick={() => handleSubmit()}
@@ -104,13 +76,10 @@ export const ActivityForm: React.FC<IProps> = ({
           type="submit"
           content="Submit"
         />
-        <Button
-          onClick={() => setEditMode(false)}
-          floated="right"
-          type="button"
-          content="Cancle"
-        />
+        <Button onClick={cancleFormOpen} floated="right" type="button" content="Cancle" />
       </Form>
     </Segment>
   );
 };
+
+export default observer(ActivityForm);
