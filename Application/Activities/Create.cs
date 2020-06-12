@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Domain;
 using MediatR;
 using Persistance;
+using FluentValidation;
 
 namespace Application.Activities
 {
@@ -21,6 +22,19 @@ namespace Application.Activities
             public String Venue { get; set; }
         }
 
+        public class CommandValidator : AbstractValidator<Command>
+        {
+            public CommandValidator()
+            {
+                RuleFor(x => x.Title).NotEmpty();
+                RuleFor(x => x.Description).NotEmpty();
+                RuleFor(x => x.Catagory).NotEmpty();
+                RuleFor(x => x.Date).NotEmpty();
+                RuleFor(x => x.City).NotEmpty();
+                RuleFor(x => x.Venue).NotEmpty();
+            }
+        }
+
         public class Handler : IRequestHandler<Command>
         {
             private readonly DataContext context;
@@ -31,7 +45,8 @@ namespace Application.Activities
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
-                var activity = new Activity{
+                var activity = new Activity
+                {
                     id = request.id,
                     Title = request.Title,
                     Description = request.Description,
